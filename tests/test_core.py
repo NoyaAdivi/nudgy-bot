@@ -79,3 +79,9 @@ def test_no_long_dashes_in_texts():
     for lang in T.values():
         for text in lang.values():
             assert "\u2014" not in text and "\u2013" not in text
+
+
+def test_hebrew_commands_stay_readable():
+    text = t("he", "help")
+    assert "‎/add‎" in text
+    assert "</b>" in text and "20/11" in text  # html tags and dates untouched

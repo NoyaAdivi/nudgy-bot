@@ -1,6 +1,7 @@
 """Every message the bot sends, in English and Hebrew."""
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from html import escape
 
@@ -124,7 +125,10 @@ T: dict[str, dict[str, str]] = {
 
 def t(lang: str, key: str, **kw) -> str:
     text = T.get(lang, T["en"]).get(key) or T["en"][key]
-    return text.format(**{k: escape(str(v)) if k in ("title", "name") else v for k, v in kw.items()})
+    text = text.format(**{k: escape(str(v)) if k in ("title", "name") else v for k, v in kw.items()})
+    if lang == "he":  # keep "/add" readable inside right-to-left text
+        text = re.sub(r"(?<![\w/<])(/[a-z]+)", "\u200e\\1\u200e", text)
+    return text
 
 
 def fmt_when(due: datetime, lang: str) -> str:
