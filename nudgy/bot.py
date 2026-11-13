@@ -7,7 +7,7 @@ How it talks to Telegram:
 4. The JobQueue wakes up at each reminder time and sends the nudge.
 """
 from __future__ import annotations
-
+import asyncio
 import logging
 import os
 from datetime import datetime, timedelta, timezone
@@ -293,5 +293,6 @@ def main() -> None:
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     if not token:
         raise SystemExit("Missing TELEGRAM_BOT_TOKEN. Copy .env.example to .env and paste your token from @BotFather.")
+        asyncio.set_event_loop(asyncio.new_event_loop())
     log.info("Nudgy is running. Press Ctrl+C to stop.")
     build_app(token).run_polling(allowed_updates=Update.ALL_TYPES)
